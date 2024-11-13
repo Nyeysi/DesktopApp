@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <div>
+            <a href="#" onclick="showContent('dashboard')">Dashboard</a>
+            <a href="#" onclick="showContent('attendance')">Attendance</a>
+            <a href="#" onclick="showContent('appointments')">Appointment History</a>
+            <a href="#" onclick="showContent('student-registration')">Registered Students</a>
+            <a href="#" onclick="showContent('instructor-registration')">Registered Instructors</a>
+        </div>
+        <a href="#" class="logout" onclick="logout()">Logout</a>
+    </div>
+    <div class="content" id="content">
+        <!-- Content will be displayed here -->
+    </div>
+
+    <script>
+        function showContent(section) {
+            const content = document.getElementById('content');
+            switch (section) {
+                case 'dashboard':
+                    content.innerHTML = `
+                        <h1>Dashboard</h1>
+                        <div class="calendar">
+                            <h2>Upcoming Events</h2>
+                            <input type="text" id="event-name" placeholder="Event Name">
+                            <input type="date" id="event-date">
+                            <input type="file" id="event-image" accept="image/*">
+                            <button onclick="addEvent()">Add Event</button>
+                            <ul id="event-list"></ul>
+                        </div>
+                    `;
+                    loadEvents();
+                    break;
+                case 'appointments':
+                    content.innerHTML = '<h1>History of Setting Appointments</h1>';
+                    break;
+                case 'attendance':
+                    content.innerHTML = `
+                        <h1>Instructor Attendance</h1>
+                        <div class="attendance-section">
+                            <h3>Fingerprint Scanner</h3>
+                            <button id="send-command-btn" class="send-command-btn">Send Command</button>
+                            <div id="fingerprint-data" class="fingerprint-data">Waiting for fingerprint data...</div>
+                        </div>
+                    `;
+                    setupFingerprintScanner();
+                    break;
+                case 'student-registration':
+                    content.innerHTML = `
+                        <h1>History of Registered Students</h1>
+                        <table id="student-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Student No.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Student rows will be added here -->
+                            </tbody>
+                        </table>`;
+                    loadStudentData();
+                    break;
+                case 'instructor-registration':
+                    content.innerHTML = `
+                        <h1>History of Registered Instructors</h1>
+                        <table id="prof-table">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Employee No.</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- Add rows here -->
+                            </tbody>
+                        </table>`;
+                    loadProfData();
+                    break;
+                default:
+                    content.innerHTML = '';
+            }
+        }
+
+        // Fingerprint scanner setup function
+        function setupFingerprintScanner() {
+            // Listen for fingerprint data
+            window.electronAPI.onFingerprintData((event, data) => {
+                console.log('Fingerprint data received:', data);
+                document.getElementById('fingerprint-data').innerText = data;
+            });
+
+            // Send command to main process when the button is clicked
+            document.getElementById('send-command-btn').addEventListener('click', () => {
+                const command = 'COMMAND_TO_ZK4500'; // Replace with the actual command for ZK4500
+                window.electronAPI.sendCommand(command);
+            });
+        }
+
+        async function fetchStudentData() {
+            try {
+                const data = await window.electronAPI.getData();
+                return data;
+            } catch (error) {
+                console.error('Error fetching student data:', error);
+                return [];
+            }
+        }
+
+        async function fetchProfData() {
+            try {
+                const data = await window.electronAPI.getProf();
+                return data;
+            } catch (error) {
+                console.error('Error fetching instructor data:', error);
+                return [];
+            }
+        }
+
+        async function addEvent() {
+            const eventName = document.getElementById('event-name').value;
+            const eventDate = document.getElementById('event-date').value;
+            const eventImage = document.getElementById('event-image').files[0];
+
+            if (!eventName || !eventDate || !eventImage) {
+                alert('Please fill out all fields.');
+                return;
+            }
+
+            const formData = {
+                name: eventName,
+                date: eventDate,
+                image: eventImage, // This is the file object
+            };
+
+            console.log("Form Data Sent:", formData); // Log the form data to ensure it is correct
+
+            try {
+                // Call the addEvent function exposed by the preload
+                await window.electronAPI.addEvent(formData);
+                console.log('Event added successfully');
+                loadEvents(); // Reload the events
+            } catch (error) {
+                console.error('Error adding event:', error);
+            }
+        }
+
+        async function loadStudentData() {
+            const response = await fetchStudentData();
+            const students = response.data;
+            const tableBody = document.querySelector('#student-table tbody');
+            tableBody.innerHTML = ''; // Clear previous rows
+
+            for (let i = 0; i < students.length; i++) {
+                const student = students[i];
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.dept}</td>
+                    <td>${student.student_no}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        async function loadProfData() {
+            const response = await fetchProfData();
+            const professors = response.data;
+            const tableBody = document.querySelector('#prof-table tbody');
+            tableBody.innerHTML = ''; // Clear previous rows
+
+            for (let i = 0; i < professors.length; i++) {
+                const prof = professors[i];
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${prof.name}</td>
+                    <td>${prof.email}</td>
+                    <td>${prof.dept}</td>
+                    <td>${prof.emp_id}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        function logout() {
+            // Log out functionality
+            window.location.href = 'index.html';
+        }
+
+        // Initialize the dashboard on load
+        showContent('dashboard');
+    </script>
+</body>
+
+</html>

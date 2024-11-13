@@ -1,0 +1,158 @@
+		body {
+		    display: flex;
+		    margin: 0;
+		    font-family: Arial, sans-serif;
+		    background-color: #f0f2f5;
+		    height: 100vh;
+		    overflow: hidden;
+		}
+
+		.sidebar {
+		    width: 250px;
+		    background-color: #276630;
+		    color: white;
+		    height: 98vh;
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: space-between;
+		    padding: 20px;
+		}
+
+		.sidebar a {
+		    padding: 15px;
+		    text-decoration: none;
+		    color: white;
+		    display: block;
+		    border-radius: 5px;
+		    margin-bottom: 10px;
+		}
+
+		.sidebar a:hover {
+		    background-color: #1e4d24;
+		}
+
+		.content {
+		    flex-grow: 1;
+		    padding: 20px;
+		    background-color: #ffffff;
+		    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		    border-radius: 10px;
+		    margin: 20px;
+		    overflow-y: auto;
+		}
+
+		.logout {
+		    background-color: red;
+		    text-align: center;
+		    border-radius: 5px;
+		    margin-bottom: 1px;
+		}
+
+		.logout:hover {
+		    background-color: darkred;
+		}
+
+		table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin-top: 20px;
+		}
+
+		table,
+		th,
+		td {
+		    border: 1px solid black;
+		}
+
+		th,
+		td {
+		    padding: 10px;
+		    text-align: left;
+		}
+
+		.calendar {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    background-color: #f9f9f9;
+		    padding: 20px;
+		    border-radius: 10px;
+		    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		    margin-top: 20px;
+		}
+
+		.calendar input,
+		.calendar button {
+		    margin: 5px;
+		    padding: 10px;
+		    border-radius: 5px;
+		    border: 1px solid #ccc;
+		}
+
+		.calendar button {
+		    background-color: #276630;
+		    color: white;
+		    cursor: pointer;
+		}
+
+		.calendar button:hover {
+		    background-color: #1e4d24;
+		}
+
+		.event-item {
+		    display: flex;
+		    align-items: center;
+		    margin: 10px 0;
+		    padding: 10px;
+		    background-color: #fff;
+		    border-radius: 5px;
+		    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.event-item img {
+		    width: 50px;
+		    height: 50px;
+		    border-radius: 50%;
+		    margin-right: 10px;
+		}
+
+		.event-item button {
+		    margin-left: auto;
+		    background-color: red;
+		    color: white;
+		    border: none;
+		    padding: 5px 10px;
+		    border-radius: 5px;
+		    cursor: pointer;
+		}
+
+		.event-item button:hover {
+		    background-color: darkred;
+		}
+
+		/* Fingerprint scanner specific styles */
+		.attendance-section {
+		    margin-top: 20px;
+		    padding: 20px;
+		    background-color: #fff;
+		    border-radius: 10px;
+		    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.fingerprint-data {
+		    font-size: 16px;
+		    margin-top: 20px;
+		}
+
+		.send-command-btn {
+		    background-color: #276630;
+		    color: white;
+		    padding: 10px 20px;
+		    border: none;
+		    border-radius: 5px;
+		    cursor: pointer;
+		}
+
+		.send-command-btn:hover {
+		    background-color: #1e4d24;
+		}

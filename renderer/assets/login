@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #267630;
+        }
+        .login-form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .login-form h2 {
+            margin: 0 0 20px;
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+        }
+        .login-form input[type="email"],
+        .login-form input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .login-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #267630; 
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-form button:hover {
+            background-color: #45a049; 
+        }
+    </style>
+</head>
+<body>
+    <div class="login-form">
+        <h2>Admin</h2>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" required autofocus>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            console.log('Login form submitted'); // Add this line
+    
+            const loginResponse = await window.electronAPI.login(email, password);
+            if (loginResponse.success) {
+                alert('Please scan the RFID before you proceed to the dashboard.');
+                const rfidResponse = await window.electronAPI.scanRfid();
+                if (rfidResponse.success) {
+                    window.location.href = 'dashboard.html'; // Redirect to dashboard.html
+                } else {
+                    alert('RFID scan failed. Please try again.');
+                }
+            } else {
+                alert('Login failed. Please check your credentials and try again.');
+            }
+        });
+    </script>
+</body>
+</html>

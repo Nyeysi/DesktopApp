@@ -1,0 +1,22 @@
+{
+  "name": "our_electron_app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "electron": "^33.0.2",
+    "electron-reloader": "^1.2.3"
+  },
+  "dependencies": {
+    "ffi-napi": "^4.0.3",
+    "firebase": "^11.0.1",
+    "ref-napi": "^3.0.3",
+    "serialport": "^10.5.0",
+    "zkteco": "^1.10.21"
+  }
+}
